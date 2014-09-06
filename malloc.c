@@ -1,7 +1,12 @@
 #include "malloc.h"
 #define align4(x) ((((x) - 1) >> 2) << 2) + 4
-// #define BLOCK_SIZE sizeof(struct s_block)
 #define BLOCK_SIZE 20
+
+t_block extend_heap(t_block last, size_t size);
+t_block find_block(t_block last, size_t size);
+t_block get_block(void *p);
+void split_block(t_block b, size_t size);
+void copy_block(t_block src, t_block dst);
 
 t_block find_block(t_block last, size_t size){
     t_block b = base;
@@ -154,4 +159,12 @@ void *realloc(void *p, size_t size){
         return p;
     }
     return NULL;
+}
+
+
+void *reallocf(void *p, size_t size){
+    void *newp;
+    newp = realloc(p, size);
+    if (!newp) free(p);
+    return newp;
 }

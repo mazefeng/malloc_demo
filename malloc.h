@@ -18,13 +18,8 @@ typedef struct s_block *t_block;
 void *malloc(size_t size);
 void *calloc(size_t number, size_t size);
 void *realloc(void *p, size_t size);
+void *reallocf(void *p, size_t size);
 void free(void *p);
-
-t_block extend_heap(t_block last, size_t size);
-t_block find_block(t_block last, size_t size);
-t_block get_block(void *p);
-void split_block(t_block b, size_t size);
-void copy_block(t_block src, t_block dst);
 
 void *base = NULL;
 

@@ -2,6 +2,8 @@
 #define align4(x) ((((x) - 1) >> 2) << 2) + 4
 #define BLOCK_SIZE 20
 
+void *base = NULL;
+
 t_block extend_heap(t_block last, size_t size);
 t_block find_block(t_block last, size_t size);
 t_block get_block(void *p);

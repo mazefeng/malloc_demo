@@ -21,6 +21,4 @@ void *realloc(void *p, size_t size);
 void *reallocf(void *p, size_t size);
 void free(void *p);
 
-void *base = NULL;
-
 #endif

@@ -12,14 +12,14 @@ t_block find_block(t_block last, size_t size){
     return b;
 }
 
-t_block extend_heap(t_block last, size_t s){
+t_block extend_heap(t_block last, size_t size){
     size_t sb;
     t_block b;
     b = sbrk(0);
-    sb = (size_t)sbrk(BLOCK_SIZE + s);
+    sb = (size_t)sbrk(BLOCK_SIZE + size);
     if(sb < 0) return NULL;
     
-    b->size = s;
+    b->size = size;
     b->next = NULL;
     b->prev = last;
     b->ptr = b->data;
@@ -28,15 +28,15 @@ t_block extend_heap(t_block last, size_t s){
     return b;
 }
 
-void split_block(t_block b, size_t s){
+void split_block(t_block b, size_t size){
     t_block new;
-    new = (t_block)(b->data + s);
-    new->size = b->size - s - BLOCK_SIZE;
+    new = (t_block)(b->data + size);
+    new->size = b->size - size - BLOCK_SIZE;
     new->next = b->next;
     new->prev = b;
     new->free = 1;
     new->ptr = new->data;
-    b->size = s;
+    b->size = size;
     b->next = new;
     if(new->next) new->next->prev = new;
 }
@@ -49,7 +49,7 @@ void *malloc(size_t size){
         last = base;
         b = find_block(last, s);
         if(b){
-            if((b->size -s) >= (BLOCK_SIZE + 4)) split_block(b, s);
+            if((b->size - s) >= (BLOCK_SIZE + 4)) split_block(b, s);
             b->free = 0;
         }
         else{
@@ -94,7 +94,7 @@ t_block get_block(void *p){
 
 int valid_addr(void *p){
     if (base){
-        if(p>base && p < sbrk(0)) return (p == (get_block(p))->ptr);
+        if(p > base && p < sbrk(0)) return (p == (get_block(p))->ptr);
     }
     return 0;
 }
@@ -135,7 +135,7 @@ void *realloc(void *p, size_t size){
         s = align4(size);
         b = get_block(p);
         if (b->size >= s){
-            if(b->size -s >= (BLOCK_SIZE + 4)) split_block(b, s);
+            if(b->size - s >= (BLOCK_SIZE + 4)) split_block(b, s);
         }
         else{
             if(b->next && b->next->free && (b->size + BLOCK_SIZE + b->next->size) >= s){
